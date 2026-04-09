@@ -3,7 +3,9 @@
   "name": "vicinae-z13ctl",
   "title": "z13ctl",
   "description": "RGB lighting and system control for ROG Flow Z13 2025",
-  "categories": ["system"],
+  "categories": [
+    "System"
+  ],
   "license": "MIT",
   "author": "elweday1",
   "contributors": [],
@@ -18,45 +20,31 @@
       "mode": "view"
     },
     {
-      "name": "z13ctl-lighting",
-      "title": "z13ctl-lighting",
+      "name": "lighting",
+      "title": "Lighting",
       "subtitle": "RGB Lighting Control",
       "description": "Control keyboard and lightbar RGB lighting",
       "mode": "view"
     },
     {
-      "name": "z13ctl-lighting-presets",
-      "title": "z13ctl-lighting-presets",
-      "subtitle": "RGB Presets",
-      "description": "Quick RGB lighting presets",
-      "mode": "view"
-    },
-    {
-      "name": "z13ctl-power",
-      "title": "z13ctl-power",
+      "name": "power",
+      "title": "Power",
       "subtitle": "Power & Performance",
       "description": "Performance profile, TDP, battery limit",
       "mode": "view"
     },
     {
-      "name": "z13ctl-undervolt",
-      "title": "z13ctl-undervolt",
+      "name": "undervolt",
+      "title": "Undervolt",
       "subtitle": "CPU Undervolt",
       "description": "CPU Curve Optimizer undervolt control",
       "mode": "view"
     },
     {
-      "name": "z13ctl-fans",
-      "title": "z13ctl-fans",
+      "name": "fans",
+      "title": "Fans",
       "subtitle": "Fan Curves",
-      "description": "View and reset fan curves",
-      "mode": "view"
-    },
-    {
-      "name": "z13ctl-fans-edit",
-      "title": "z13ctl-fans-edit",
-      "subtitle": "Fan Curve Editor",
-      "description": "Edit custom 8-point fan curves",
+      "description": "Fan curve control and editing",
       "mode": "view"
     }
   ],
@@ -66,7 +54,9 @@
     "dev": "vici develop"
   },
   "dependencies": {
-    "@vicinae/api": "^0.8.2"
+    "@bufbuild/protobuf": "^2.7.0",
+    "@vicinae/api": "0.16.7",
+    "react": "19.0.0"
   },
   "devDependencies": {
     "typescript": "^5.9.2"

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActionPanel, Action, List, showToast, Toast, Icon, Detail } from '@vicinae/api';
-import { runZ13ctl } from './utils/cli';
+import { runZ13ctl, runZ13ctlSafe } from './utils/cli';
 
 interface FanPoint {
   temp: number;
@@ -41,10 +41,36 @@ function validateCurve(points: FanPoint[]): string | null {
   return null;
 }
 
-export default function FansEdit() {
+export default function FansControl() {
+  const [fanInfo, setFanInfo] = useState<string>('loading...');
   const [points, setPoints] = useState<FanPoint[]>(DEFAULT_CURVE);
 
-  const apply = async () => {
+  const loadStatus = async () => {
+    try {
+      const result = await runZ13ctlSafe('fancurve --get');
+      if (result.success) {
+        setFanInfo(result.output);
+      } else {
+        setFanInfo('failed to load: ' + (result.error || 'unknown'));
+      }
+    } catch (e) {
+      setFanInfo(String(e));
+    }
+  };
+
+  useEffect(() => { loadStatus(); }, []);
+
+  const resetFans = async () => {
+    try {
+      await runZ13ctl('fancurve --reset');
+      showToast({ title: 'Fan curve reset to auto', style: Toast.Style.Success });
+      loadStatus();
+    } catch (e) {
+      showToast({ title: 'Failed', message: String(e), style: Toast.Style.Failure });
+    }
+  };
+
+  const applyCurve = async () => {
     const error = validateCurve(points);
     if (error) {
       showToast({ title: 'Invalid curve', message: error, style: Toast.Style.Failure });
@@ -54,6 +80,7 @@ export default function FansEdit() {
       const curveStr = pointsToCurveString(points);
       await runZ13ctl(`fancurve --set "${curveStr}"`);
       showToast({ title: 'Fan curve applied', style: Toast.Style.Success });
+      loadStatus();
     } catch (e) {
       showToast({ title: 'Failed', message: String(e), style: Toast.Style.Failure });
     }
@@ -69,25 +96,29 @@ export default function FansEdit() {
     <List
       actions={
         <ActionPanel>
-          <Action title="Apply Curve" icon={Icon.Checkmark} onAction={apply} />
-          <Action title="Reset to Default" icon={Icon.Restore} onAction={resetToDefault} />
+          <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={loadStatus} />
+          <Action title="Reset to Auto" icon={Icon.Undo} onAction={resetFans} />
+          <Action title="Apply Custom Curve" icon={Icon.Checkmark} onAction={applyCurve} />
+          <Action title="Reset to Default" icon={Icon.Undo} onAction={resetToDefault} />
         </ActionPanel>
       }
     >
-      <List.Section title={`Fan Curve ${validationError ? '⚠ ' + validationError : '✓ Valid'}`}>
+      <List.Section title="Current Fan Curve">
+        <List.Item
+          title="Status"
+          icon={Icon.Temperature}
+          detail={<Detail markdown={`\`\`\`\n${fanInfo}\n\`\`\``} />}
+        />
+      </List.Section>
+
+      <List.Section title={`Custom Curve ${validationError ? '⚠ ' + validationError : '✓'}`}>
         {points.map((p, i) => (
           <List.Item
             key={i}
-            title={`Point ${i + 1}`}
-            subtitle={`${p.temp}°C : ${p.speed}${p.isPercent ? '%' : ' PWM'}`}
+            title={`Point ${i + 1}: ${p.temp}°C`}
+            subtitle={`${p.speed}${p.isPercent ? '%' : ' PWM'}`}
           />
         ))}
-      </List.Section>
-      <List.Section title="Current Definition (for reference)">
-        <List.Item
-          title="Format"
-          detail={<Detail markdown={`\`${pointsToCurveString(points)}\``} />}
-        />
       </List.Section>
     </List>
   );

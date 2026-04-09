@@ -96,7 +96,7 @@ export default function PowerControl() {
     <List
       actions={
         <ActionPanel>
-          <Action title="Refresh" icon={Icon.Refresh} onAction={loadStatus} />
+          <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={loadStatus} />
         </ActionPanel>
       }
     >
@@ -106,7 +106,11 @@ export default function PowerControl() {
             key={p}
             title={p.charAt(0).toUpperCase() + p.slice(1)}
             icon={currentProfile.includes(p) ? Icon.Checkmark : Icon.Circle}
-            onTap={() => setProfile(p)}
+            actions={
+              <ActionPanel>
+                <Action title={`Set Profile: ${p}`} onAction={() => setProfile(p)} />
+              </ActionPanel>
+            }
           />
         ))}
       </List.Section>
@@ -117,7 +121,11 @@ export default function PowerControl() {
             key={w}
             title={`${w}W`}
             icon={tdp.includes(String(w)) ? Icon.Checkmark : Icon.Circle}
-            onTap={() => setTdpValue(w)}
+            actions={
+              <ActionPanel>
+                <Action title={`Set TDP: ${w}W`} onAction={() => setTdpValue(w)} />
+              </ActionPanel>
+            }
           />
         ))}
       </List.Section>
@@ -128,7 +136,11 @@ export default function PowerControl() {
             key={b}
             title={`${b}%`}
             icon={batteryLimit.includes(String(b)) ? Icon.Checkmark : Icon.Circle}
-            onTap={() => setBattery(b)}
+            actions={
+              <ActionPanel>
+                <Action title={`Set Battery Limit: ${b}%`} onAction={() => setBattery(b)} />
+              </ActionPanel>
+            }
           />
         ))}
       </List.Section>
@@ -137,7 +149,7 @@ export default function PowerControl() {
         <List.Item
           title="Boot Sound"
           subtitle={bootSound === '1' ? 'On' : bootSound === '0' ? 'Off' : '—'}
-          icon={Icon.Speaker}
+          icon={Icon.SpeakerOn}
           actions={
             <ActionPanel>
               <Action title="Toggle" icon={Icon.Switch} onAction={toggleBootSound} />
@@ -147,7 +159,7 @@ export default function PowerControl() {
         <List.Item
           title="Panel Overdrive"
           subtitle={panelOd === '1' ? 'On' : panelOd === '0' ? 'Off' : '—'}
-          icon={Icon.Display}
+          icon={Icon.Desktop}
           actions={
             <ActionPanel>
               <Action title="Toggle" icon={Icon.Switch} onAction={togglePanelOd} />

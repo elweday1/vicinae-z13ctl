@@ -46,15 +46,15 @@ export default function UndervoltControl() {
     <List
       actions={
         <ActionPanel>
-          <Action title="Refresh" icon={Icon.Refresh} onAction={loadStatus} />
-          <Action title="Reset" icon={Icon.Restore} onAction={reset} />
+          <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={loadStatus} />
+          <Action title="Reset" icon={Icon.Undo} onAction={reset} />
         </ActionPanel>
       }
     >
       <List.Section title="Current Offset">
         <List.Item
           title={currentOffset}
-          icon={Icon.Chip}
+          icon={Icon.ComputerChip}
         />
       </List.Section>
 
@@ -65,7 +65,11 @@ export default function UndervoltControl() {
             title={o === 0 ? 'Stock (0)' : `${o} mV`}
             subtitle={o === 0 ? 'No offset' : `Voltage offset: ${o}mV`}
             icon={currentOffset.includes(String(o)) ? Icon.Checkmark : Icon.Circle}
-            onTap={() => setOffset(o)}
+            actions={
+              <ActionPanel>
+                <Action title={`Set Undervolt: ${o} mV`} onAction={() => setOffset(o)} />
+              </ActionPanel>
+            }
           />
         ))}
       </List.Section>

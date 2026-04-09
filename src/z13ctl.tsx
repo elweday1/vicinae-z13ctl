@@ -53,13 +53,13 @@ export default function Z13ctlStatus() {
   };
 
   if (loading && !status) {
-    return <List.EmptyView title="Loading..." icon={Icon.Loading} />;
+    return <List.EmptyView title="Loading..." icon={Icon.CircleProgress} />;
   }
 
   return (
     <List actions={
       <ActionPanel>
-        <Action title="Refresh" icon={Icon.Refresh} onAction={loadStatus} />
+        <Action title="Refresh" icon={Icon.ArrowClockwise} onAction={loadStatus} />
         <Action title="Profile: Quiet" onAction={() => quickApply('profile --set quiet', 'Profile: Quiet')} />
         <Action title="Profile: Balanced" onAction={() => quickApply('profile --set balanced', 'Profile: Balanced')} />
         <Action title="Profile: Performance" onAction={() => quickApply('profile --set performance', 'Profile: Performance')} />
@@ -71,12 +71,12 @@ export default function Z13ctlStatus() {
       <List.Section title="System Status">
         <List.Item
           title="APU Temperature"
-          icon={Icon.Thermometer}
+          icon={Icon.Temperature}
           detail={<Detail markdown={`**${status?.apu || '—'}**`} />}
         />
         <List.Item
           title="Fans"
-          icon={Icon.Fan}
+          icon={Icon.Temperature}
           detail={<Detail markdown={`**${status?.fans || '—'}**`} />}
         />
         <List.Item
